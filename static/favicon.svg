@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#D55E00"/>
+  <!-- three memory slots, the top one "recalled" (white) -->
+  <rect x="12" y="14" width="40" height="9" rx="3" fill="#ffffff"/>
+  <rect x="12" y="27.5" width="40" height="9" rx="3" fill="#ffffff" opacity="0.45"/>
+  <rect x="12" y="41" width="40" height="9" rx="3" fill="#ffffff" opacity="0.45"/>
+</svg>

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Learning What to Recall</title>
+  <meta name="description" content="Learning What to Recall: adaptive multi-cue episodic memory for world models.">
+  <link rel="icon" type="image/svg+xml" href="static/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="static/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="static/favicon-16.png">
+  <link rel="apple-touch-icon" href="static/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/style.css?v=10">
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- HEADER                                                                -->
+<!-- ===================================================================== -->
+<header class="hero">
+  <div class="container">
+    <h1>Learning What to Recall:<br>Adaptive Multi-Cue Episodic Memory for World Models</h1>
+    <p class="subtitle">Learning which memories to recall, and which cues to trust, from the future the world model is trained to predict.</p>
+
+    <!-- Anonymous submission: keep author block anonymized until camera-ready. -->
+    <p class="authors">Anonymous Authors</p>
+    <p class="affils">Anonymous Institution(s)</p>
+    <p class="venue">Under review</p>
+
+    <!-- Paper / Code / arXiv buttons removed for anonymous review. Re-add after de-anonymization. -->
+  </div>
+</header>
+
+<!-- ===================================================================== -->
+<!-- TEASER                                                                -->
+<!-- ===================================================================== -->
+<section id="teaser">
+  <div class="container">
+    <figure class="breakout" style="margin-top:24px; margin-bottom:0">
+      <div class="media">
+        <video autoplay muted loop playsinline preload="auto">
+          <source src="static/videos/teaser.mp4" type="video/mp4">
+        </video>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- ABSTRACT + MOTIVATION                                                 -->
+<!-- ===================================================================== -->
+<section id="abstract" class="alt">
+  <div class="container">
+    <h2>Abstract</h2>
+    <div class="narrow">
+      <div>
+        <p class="lead">
+          World models predict future observations from current experience and actions, yet long-horizon
+          prediction can depend on observations seen far in the past: scenes and objects persist, and may keep
+          evolving, after leaving the field of view. Episodic memory preserves such experience as individually
+          addressable memories for later recall. But as memory accumulates, only a small fraction of it is useful
+          for any given prediction, and existing world models select from it with fixed rules such as temporal
+          recency, pose overlap, or visual similarity. Similarity under one cue need not reflect predictive
+          usefulness, and the reliability of that cue varies across environments and queries. In an elbow-shaped
+          corridor, a nearby pose-matched memory may lie across a wall and visual appearance is ambiguous
+          along the corridor, while spatial audio can still identify the relevant past experience.
+        </p>
+      </div>
+    </div>
+
+    <div class="question">
+      <p>How can a world model learn <em>which past observations</em> are useful for future prediction,
+      and <em>which retrieval cues</em> can identify them before the future is known?</p>
+    </div>
+
+    <div class="narrow">
+      <p class="lead">
+        We propose <b><span style="color:var(--accent)">Future-Aware Recall</span> (FAR)</b>, a framework that
+        learns episodic recall from future-aware predictive supervision and adaptive multi-cue scoring. During
+        training, FAR measures predictive utility by the conditional log-likelihood of the realized future given
+        recalled context, approximated by negative diffusion prediction loss, and uses it to train a retriever
+        that remains future-blind at inference. The retriever learns cue-specific relevance and automatically
+        determines which available retrieval cues, such as time, pose, vision, and audio, to trust for each query.
+        Across three complementary settings, FAR outperforms hand-designed recall even with the same retrieval
+        cues, automatically adapts which available cues to trust, and recalls the right history as the world
+        changes.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- METHOD                                                                -->
+<!-- ===================================================================== -->
+<section id="method">
+  <div class="container">
+    <p class="eyebrow">Method</p>
+    <h2>Future-Aware Recall</h2>
+    <figure>
+      <div class="media light">
+        <img src="static/images/figure.png" alt="Overview of FAR: cue-specific scorers over the interaction history, query-dependent cue fusion, Top-K recall, and world-model prediction, with predictive utility from the observed future supervising the scorers during training only.">
+      </div>
+      <figcaption class="caption">
+        <b>Overview.</b> FAR scores memories with general retrieval cues, adaptively fuses the cue-specific
+        relevance, and recalls a compact Top-K context from episodic memory for world-model prediction. During
+        training, the observed future provides predictive utility to supervise the retriever; at inference,
+        recall stays future-blind.
+      </figcaption>
+    </figure>
+
+    <div class="cards">
+      <div class="card">
+        <h3><span class="num">1</span>Predictive utility</h3>
+        <p>A recalled context is useful when it makes the realized future more likely under the world model.
+        We define the predictive utility of a context as the conditional log-likelihood of the next observation
+        given that context and the current query, and show it lower-bounds the predictive information the
+        context carries about the future.</p>
+      </div>
+      <div class="card">
+        <h3><span class="num">2</span>Future-aware supervision</h3>
+        <p>At inference the future is unknown, but during training it is observed. Bayes' rule combines the
+        retriever's future-blind recall distribution with predictive utility into a future-aware posterior over
+        contexts. The retriever is trained to match this posterior, which transfers credit from the observed
+        future into a recall policy that never needs it at test time.</p>
+      </div>
+      <div class="card">
+        <h3><span class="num">3</span>Adaptive cue fusion</h3>
+        <p>Each available cue (time, pose, vision, audio, or anything else attached to a memory) yields its own
+        relevance score. Scores are standardized over the memory and fused with query-dependent weights from a
+        learned gate, so FAR can lean on whichever cue is most trustworthy for the current query.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:36px">Video diffusion instantiation</h3>
+    <div class="grid cols-2">
+      <div>
+        <p><b>Cacheable retrieval encoders.</b> Vision and audio encoders are contrastively pretrained and frozen,
+        so historical keys are computed once and cached. Only lightweight query-side adapters and the cue-fusion
+        gate remain trainable through FAR.</p>
+        <p><b>Diffusion-based predictive utility.</b> Exact likelihoods are expensive for diffusion models, so
+        predictive utility is approximated by the negative diffusion prediction loss of the realized future
+        conditioned on each candidate memory, evaluated with shared noise across candidates.</p>
+      </div>
+      <div>
+        <p><b>Temporally structured recall.</b> Memory is partitioned into temporal chunks; the best-scoring
+        observation from each chunk is kept and the K highest-scoring representatives are recalled, avoiding
+        redundant nearby frames.</p>
+        <p><b>Training and inference.</b> World-model and retriever updates alternate: recalled contexts train
+        the world model, while periodic utility evaluations over global and local candidate pools provide
+        future-aware targets for the retriever. Inference needs neither the future nor utility evaluation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- RESULTS                                                               -->
+<!-- ===================================================================== -->
+<section id="results" class="alt">
+  <div class="container">
+    <p class="eyebrow">Experiments</p>
+    <h2>Results</h2>
+    <div class="narrow">
+      <p class="lead">
+        Three complementary settings, each with a different source of long-horizon uncertainty:
+        <b>LoopNav</b>, a static outdoor Minecraft environment with time, pose, and visual cues;
+        <b>SoundSpaces</b>, realistic indoor scenes with spatialized audio; and <b>AI2-THOR</b>, interactive
+        household scenes whose state changes with the agent's actions.
+      </p>
+      <p class="lead">
+        Every trajectory has an <b>exploration</b> phase, in which the agent observes and, where applicable,
+        interacts with the environment, and a <b>return</b> phase, in which it revisits explored locations.
+        The world model generates the return-phase video using the exploration-phase observations as its memory
+        pool, and we measure frame-wise discrepancy against ground truth.
+      </p>
+    </div>
+    <h3 style="text-align:center; margin-top:36px; margin-bottom:6px">Example evaluation trajectories</h3>
+    <p class="caption" style="margin-bottom:18px">
+      These are <b>ground-truth episodes from the evaluation sets, not model rollouts.</b> Each shows the
+      exploration phase, which fills the episodic memory, followed by the return phase that the world model is
+      asked to predict. Generated rollouts are shown further below, per dataset.
+    </p>
+    <div class="breakout eval-row" style="margin-top:0; margin-bottom:8px">
+      <figure class="ar-232">
+        <div class="media">
+          <video autoplay muted loop playsinline controls preload="auto">
+            <source src="static/videos/full_episode_loopnav_12.mp4" type="video/mp4">
+          </video>
+        </div>
+        <figcaption><b>LoopNav (ground truth).</b> Exploration, then return.</figcaption>
+      </figure>
+      <figure>
+        <div class="media">
+          <!-- Starts muted so it can autoplay; the viewer unmutes with the speaker control to hear the spatial audio cue. -->
+          <video autoplay muted loop playsinline controls preload="auto">
+            <source src="static/videos/full_episode_soundspaces_1115.mp4" type="video/mp4">
+          </video>
+        </div>
+        <figcaption><b>SoundSpaces (ground truth).</b> Exploration, then return. <b>&#128266; Has sound.</b> Click the speaker icon in the controls to hear the spatialized audio the agent uses as a retrieval cue.</figcaption>
+      </figure>
+      <figure>
+        <div class="media">
+          <video autoplay muted loop playsinline controls preload="auto">
+            <source src="static/videos/full_episode_ai2thor_350.mp4" type="video/mp4">
+          </video>
+        </div>
+        <figcaption><b>AI2-THOR (ground truth).</b> Exploration with object interactions, then return.</figcaption>
+      </figure>
+    </div>
+
+    <!-- ---------------- LoopNav ---------------- -->
+    <div class="subsec">
+      <div class="ds-title">
+        <p class="eyebrow">LoopNav</p>
+        <h3>FAR outperforms hand-designed recall</h3>
+      </div>
+      <p>
+        A static outdoor Minecraft environment with procedurally generated navigation, where retrieval can use
+        time and pose metadata as well as visual observations. We compare against a temporal baseline
+        (most recent observations), WorldMem (field-of-view overlap with the goal), and LongLive-RAG
+        (reconstructive embedding similarity), and evaluate FAR with metadata cues, visual cues, or their
+        adaptive fusion.
+      </p>
+      <h3 style="text-align:center; margin-top:36px; margin-bottom:6px">LoopNav highlights</h3>
+      <p class="caption" style="margin-bottom:18px">
+        Return-phase moments from several evaluation episodes, each labeled with its clip number. Every block shows
+        the ground-truth frame, then for FAR, Temporal, WorldMem, and LongLive-RAG the prediction and the four
+        recalled memories with their time offsets. <b class="red">Red shading marks where a prediction differs from
+        the ground truth.</b> It is an error overlay drawn for visualization, not something the model generated. FAR
+        reaches 20 to 40 seconds back for the frames that matter, while the baselines mostly recall the last few
+        seconds.
+      </p>
+      <figure class="breakout" style="margin-top:0; margin-bottom:30px">
+        <div class="media">
+          <video autoplay muted loop playsinline controls preload="auto">
+            <source src="static/videos/highlights_loopnav.mp4" type="video/mp4">
+          </video>
+        </div>
+      </figure>
+      <details class="rollouts">
+        <summary>Show full LoopNav rollouts (4 uncut episodes)</summary>
+        <div class="inner">
+        <p>Full return-phase rollouts. Press play on a video to watch it; use the controls to scrub or go fullscreen.</p>
+        <div class="grid cols-2">
+          <figure>
+            <div class="media">
+              <video muted playsinline controls preload="none">
+                <source src="static/videos/rollout_loopnav_12.mp4" type="video/mp4">
+              </video>
+            </div>
+            <figcaption><b>LoopNav, episode 12</b></figcaption>
+          </figure>
+          <figure>
+            <div class="media">
+              <video muted playsinline controls preload="none">
+                <source src="static/videos/rollout_loopnav_1656.mp4" type="video/mp4">
+              </video>
+            </div>
+            <figcaption><b>LoopNav, episode 1656</b></figcaption>
+          </figure>
+          <figure>
+            <div class="media">
+              <video muted playsinline controls preload="none">
+                <source src="static/videos/rollout_loopnav_2259.mp4" type="video/mp4">
+              </video>
+            </div>
+            <figcaption><b>LoopNav, episode 2259</b></figcaption>
+          </figure>
+          <figure>
+            <div class="media">
+              <video muted playsinline controls preload="none">
+                <source src="static/videos/rollout_loopnav_3106.mp4" type="video/mp4">
+              </video>
+            </div>
+            <figcaption><b>LoopNav, episode 3106</b></figcaption>
+          </figure>
+        </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- ---------------- SoundSpaces ---------------- -->
+    <div class="subsec">
+      <div class="ds-title">
+        <p class="eyebrow">SoundSpaces</p>
+        <h3>FAR adaptively learns which cues to trust</h3>
+      </div>
+      <p>
+        Realistic indoor navigation augmented with spatialized audio. Two corpora differ in memory density: one
+        performs periodic 360° scans during exploration, the other scans only at the endpoints. Evaluation is
+        stratified by the physical length of the return phase, so longer trajectories require prediction
+        through more rooms, corridors, and viewpoint changes.
+      </p>
+      <h3 style="text-align:center; margin-top:36px; margin-bottom:6px">SoundSpaces highlights</h3>
+      <p class="caption" style="margin-bottom:18px">
+        Return-phase moments from several evaluation episodes, each labeled with its clip number. Every block shows
+        the ground-truth frame, then for each method the prediction and the recalled memories with their time
+        offsets. <b class="red">Red shading marks where a prediction differs from the ground truth.</b> It is an
+        error overlay drawn for visualization, not something the model generated. Where pose and appearance are
+        ambiguous along a corridor, FAR recalls a memory with a clear line of sight to the goal region.
+      </p>
+      <figure class="breakout" style="margin-top:0; margin-bottom:30px">
+        <div class="media">
+          <video autoplay muted loop playsinline controls preload="auto">
+            <source src="static/videos/highlights_soundspaces.mp4" type="video/mp4">
+          </video>
+        </div>
+      </figure>
+      <details class="rollouts">
+        <summary>Show full SoundSpaces rollouts (4 uncut episodes)</summary>
+        <div class="inner">
+        <p>Full return-phase rollouts. Press play on a video to watch it; use the controls to scrub or go fullscreen.</p>
+        <div class="grid cols-2">
+          <figure>
+            <div class="media">
+              <video muted playsinline controls preload="none">
+                <source src="static/videos/rollout_soundspaces_84.mp4" type="video/mp4">
+              </video>
+            </div>
+            <figcaption><b>SoundSpaces, episode 84</b></figcaption>
+          </figure>
+          <figure>
+            <div class="media">
+              <video muted playsinline controls preload="none">
+                <source src="static/videos/rollout_soundspaces_99.mp4" type="video/mp4">
+              </video>
+            </div>
+            <figcaption><b>SoundSpaces, episode 99</b></figcaption>
+          </figure>
+          <figure>
+            <div class="media">
+              <video muted playsinline controls preload="none">
+                <source src="static/videos/rollout_soundspaces_212.mp4" type="video/mp4">
+              </video>
+            </div>
+            <figcaption><b>SoundSpaces, episode 212</b></figcaption>
+          </figure>
+          <figure>
+            <div class="media">
+              <video muted playsinline controls preload="none">
+                <source src="static/videos/rollout_soundspaces_1115.mp4" type="video/mp4">
+              </video>
+            </div>
+            <figcaption><b>SoundSpaces, episode 1115</b></figcaption>
+          </figure>
+        </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- ---------------- AI2-THOR ---------------- -->
+    <div class="subsec">
+      <div class="ds-title">
+        <p class="eyebrow">AI2-THOR</p>
+        <h3>FAR recalls the right state as the world changes</h3>
+      </div>
+      <p>
+        Interactive household scenes where the agent moves objects between surfaces and containers during
+        exploration, so memory holds several observations of the same place in <em>conflicting</em> world
+        states. On return, the model must render the state established by the preceding interactions. A
+        spatially well-matched memory may depict a stale state, which defeats recency- and geometry-based
+        recall.
+      </p>
+
+      <h3 style="text-align:center; margin-top:36px; margin-bottom:6px">AI2-THOR highlights</h3>
+      <p class="caption" style="margin-bottom:18px">
+        Return-phase moments from several evaluation episodes, each labeled with its clip number. Every block shows
+        the ground-truth frame, then for each method the prediction and the recalled memories with their time
+        offsets. A badge on each prediction says whether the rendered state matches the world the agent left behind.
+        When the agent returns to a station it has changed, FAR recalls the frames from the interaction itself rather
+        than a pose-matched but stale view.
+      </p>
+      <figure class="breakout" style="margin-top:0; margin-bottom:30px">
+        <div class="media">
+          <video autoplay muted loop playsinline controls preload="auto">
+            <source src="static/videos/highlights_ai2thor.mp4" type="video/mp4">
+          </video>
+        </div>
+      </figure>
+
+      <details class="rollouts">
+        <summary>Show full AI2-THOR rollouts (3 uncut episodes)</summary>
+        <div class="inner">
+        <p>Full return-phase rollouts. Press play on a video to watch it; use the controls to scrub or go fullscreen.</p>
+        <div class="grid cols-2">
+          <figure>
+            <div class="media">
+              <video muted playsinline controls preload="none">
+                <source src="static/videos/rollout_ai2thor_309.mp4" type="video/mp4">
+              </video>
+            </div>
+            <figcaption><b>AI2-THOR, episode 309</b></figcaption>
+          </figure>
+          <figure>
+            <div class="media">
+              <video muted playsinline controls preload="none">
+                <source src="static/videos/rollout_ai2thor_350.mp4" type="video/mp4">
+              </video>
+            </div>
+            <figcaption><b>AI2-THOR, episode 350</b></figcaption>
+          </figure>
+          <figure>
+            <div class="media">
+              <video muted playsinline controls preload="none">
+                <source src="static/videos/rollout_ai2thor_430.mp4" type="video/mp4">
+              </video>
+            </div>
+            <figcaption><b>AI2-THOR, episode 430</b></figcaption>
+          </figure>
+        </div>
+        </div>
+      </details>
+
+      <h3 style="font-size:1.1rem; margin-top:36px">Off-scene dynamics prediction</h3>
+      <p>
+        A controlled two-agent corridor: the observer sees a second, independently patrolling agent only
+        intermittently through a doorway, and must later predict where that agent is when looking down the
+        corridor. Each recalled context is a pair of observations about 1.5 seconds apart so it can carry motion.
+      </p>
+      <div class="stats">
+        <div class="stat"><div class="v">41.9%</div><div class="l">Temporal</div></div>
+        <div class="stat"><div class="v">32.4%</div><div class="l">WorldMem</div></div>
+        <div class="stat ours"><div class="v">67.1%</div><div class="l">FAR, time &amp; pose</div></div>
+        <div class="stat ours"><div class="v">94.6%</div><div class="l">FAR, + agent cue</div></div>
+      </div>
+      <figure class="breakout" style="margin-top:18px; margin-bottom:10px">
+        <div class="media">
+          <video autoplay muted loop playsinline controls preload="auto">
+            <source src="static/videos/rollout_ai2thor_dyn_47.mp4" type="video/mp4">
+          </video>
+        </div>
+        <figcaption class="caption">
+          <b>Off-scene dynamics, episode 47.</b> Return-phase rollout in the two-agent corridor. FAR recalls a
+          motion-informative episode containing the second agent and predicts where it will be; WorldMem retrieves a
+          spatially relevant but dynamically uninformative memory.
+        </figcaption>
+      </figure>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- CONCLUSION                                                            -->
+<!-- ===================================================================== -->
+<section id="conclusion" class="alt">
+  <div class="container narrow">
+    <h2>Discussion and limitations</h2>
+    <p>
+      FAR learns both which episodic memories are useful for prediction and which retrieval cues to trust. It
+      uses the observed future during training to assign predictive credit while remaining future-blind at
+      inference, and its adaptive cue fusion lets it exploit time, pose, vision, audio, or any other signal
+      attached to a memory. Across navigation, multimodal, and changing-state environments, this consistently
+      improves long-horizon prediction and supports predictive utility as a principled basis for episodic
+      memory access in persistent world models.
+    </p>
+    <p>
+      Our work focuses on the recall problem and assumes an external episodic memory. How memories are written,
+      compressed, or forgotten, and how interactions among multiple memories are credited beyond our
+      candidate-level approximation, remain open. FAR relies on informative retrieval cues and adds training-time
+      computation for future-aware utility evaluation, though inference is unchanged. Our experiments are in
+      controlled simulation; extending predictive episodic recall to richer real-world settings, together with
+      learned memory formation and persistent-state representations, is a natural next step.
+    </p>
+  </div>
+</section>
+
+<!-- BibTeX section removed for anonymous review. Re-add after de-anonymization. -->
+
+<footer>
+  <div class="container">
+    Anonymous project page for double-blind review.
+  </div>
+</footer>
+
+<script src="static/js/main.js?v=10"></script>
+</body>
+</html>
