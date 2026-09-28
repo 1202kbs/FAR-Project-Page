@@ -17,3 +17,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }, { threshold: 0.2 });
   videos.forEach((v) => io.observe(v));
 });
+
+// Teaser: show native controls only while the pointer is over the video.
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("video[data-hover-controls]").forEach((v) => {
+    v.addEventListener("pointerenter", () => v.setAttribute("controls", ""));
+    v.addEventListener("pointerleave", () => v.removeAttribute("controls"));
+  });
+});

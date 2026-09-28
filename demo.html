@@ -5,13 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Learning What to Recall (demo)</title>
   <meta name="description" content="Learning What to Recall: qualitative rollout videos on LoopNav, SoundSpaces, and AI2-THOR.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Learning What to Recall: Adaptive Multi-Cue Episodic Memory for World Models">
+  <meta property="og:description" content="Qualitative demo: highlight reels and uncut rollouts on LoopNav, SoundSpaces, and AI2-THOR.">
+  <!-- og:image needs an ABSOLUTE URL to work in link previews; prepend the final host after deployment. -->
+  <meta property="og:image" content="static/images/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/svg+xml" href="static/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="static/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="static/favicon-16.png">
   <link rel="apple-touch-icon" href="static/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="static/css/style.css?v=10">
+  <link rel="stylesheet" href="static/css/style.css?v=18">
 </head>
 <body>
 
@@ -20,8 +26,16 @@
   <div class="container">
     <h1>Learning What to Recall:<br>Adaptive Multi-Cue Episodic Memory for World Models</h1>
     <p class="subtitle">Qualitative demo: rollout videos on LoopNav, SoundSpaces, and AI2-THOR.</p>
-    <p class="authors">Anonymous Authors</p>
-    <p class="affils">Anonymous Institution(s)</p>
+    <p class="authors">
+      Beomsu Kim<sup>1,2</sup>, Chieh-Hsin Lai<sup>2</sup>, Bac Nguyen<sup>2</sup>, Amir Bar<sup>3</sup>,
+      Jong Chul Ye<sup>1,&dagger;</sup>, Yuki Mitsufuji<sup>2,&dagger;</sup>
+    </p>
+    <p class="affils">
+      <sup>1</sup>Korea Advanced Institute of Science &amp; Technology &nbsp;&middot;&nbsp;
+      <sup>2</sup>Sony Group Corporation &nbsp;&middot;&nbsp;
+      <sup>3</sup>Imperial College London<br>
+      <sup>&dagger;</sup>Corresponding authors
+    </p>
   </div>
 </header>
 
@@ -39,7 +53,7 @@
     </div>
     <figure class="breakout" style="margin-top:24px; margin-bottom:0">
       <div class="media">
-        <video autoplay muted loop playsinline preload="auto">
+        <video autoplay muted loop playsinline preload="auto" poster="static/posters/teaser.jpg">
           <source src="static/videos/teaser.mp4" type="video/mp4">
         </video>
       </div>
@@ -51,18 +65,17 @@
   <div class="container">
     <p class="eyebrow">LoopNav</p>
     <h2>FAR outperforms hand-designed recall</h2>
-    <p class="narrow" style="text-align:center">A static outdoor Minecraft environment with procedurally generated navigation. With the same time and pose cues, FAR retrieves frames with a clearer predictive view of the goal than WorldMem, and fusing metadata with vision gives the strongest long-horizon rollouts.</p>
-    <h3 style="text-align:center; margin-top:36px; margin-bottom:6px">LoopNav highlights</h3>
     <p class="caption" style="margin-bottom:18px">
-      Return-phase moments from several evaluation episodes, each labeled with its clip number. Every block shows the
-      ground-truth frame, then for FAR, Temporal, WorldMem, and LongLive-RAG the prediction and the four recalled
-      memories with their time offsets. <b class="red">Red shading marks where a prediction differs from the ground
-      truth.</b> It is an error overlay drawn for visualization, not something the model generated. FAR reaches 20 to
-      40 seconds back for the frames that matter, while the baselines mostly recall the last few seconds.
+      A static outdoor Minecraft environment with procedurally generated navigation, where retrieval can use time,
+      pose, and visual cues. Each block of the reel shows the ground-truth frame, then for FAR, Temporal, WorldMem,
+      and LongLive-RAG the prediction and the four recalled memories with their time offsets. <b class="red">Red
+      shading marks where a prediction differs from the ground truth.</b> It is an error overlay drawn for
+      visualization, not something the model generated. FAR reaches 20 to 40 seconds back for the frames that
+      matter, while the baselines mostly recall the last few seconds.
     </p>
     <figure class="breakout" style="margin-top:0; margin-bottom:30px">
       <div class="media">
-        <video autoplay muted loop playsinline controls preload="auto">
+        <video autoplay muted loop playsinline controls preload="metadata" poster="static/posters/highlights_loopnav.jpg">
           <source src="static/videos/highlights_loopnav.mp4" type="video/mp4">
         </video>
       </div>
@@ -74,7 +87,7 @@
       <div class="grid cols-2">
         <figure>
           <div class="media">
-            <video muted playsinline controls preload="none">
+            <video muted playsinline controls preload="none" poster="static/posters/rollout_loopnav_12.jpg">
               <source src="static/videos/rollout_loopnav_12.mp4" type="video/mp4">
             </video>
           </div>
@@ -82,7 +95,7 @@
         </figure>
         <figure>
           <div class="media">
-            <video muted playsinline controls preload="none">
+            <video muted playsinline controls preload="none" poster="static/posters/rollout_loopnav_1656.jpg">
               <source src="static/videos/rollout_loopnav_1656.mp4" type="video/mp4">
             </video>
           </div>
@@ -90,7 +103,7 @@
         </figure>
         <figure>
           <div class="media">
-            <video muted playsinline controls preload="none">
+            <video muted playsinline controls preload="none" poster="static/posters/rollout_loopnav_2259.jpg">
               <source src="static/videos/rollout_loopnav_2259.mp4" type="video/mp4">
             </video>
           </div>
@@ -98,7 +111,7 @@
         </figure>
         <figure>
           <div class="media">
-            <video muted playsinline controls preload="none">
+            <video muted playsinline controls preload="none" poster="static/posters/rollout_loopnav_3106.jpg">
               <source src="static/videos/rollout_loopnav_3106.mp4" type="video/mp4">
             </video>
           </div>
@@ -114,18 +127,16 @@
   <div class="container">
     <p class="eyebrow">SoundSpaces</p>
     <h2>FAR adaptively learns which cues to trust</h2>
-    <p class="narrow" style="text-align:center">Realistic indoor navigation with spatialized audio. When pose and appearance are ambiguous, for example along a long corridor, FAR learns to rely on audio to recall a memory with a clear line of sight to the goal region.</p>
-    <h3 style="text-align:center; margin-top:36px; margin-bottom:6px">SoundSpaces highlights</h3>
     <p class="caption" style="margin-bottom:18px">
-      Return-phase moments from several evaluation episodes, each labeled with its clip number. Every block shows the
-      ground-truth frame, then for each method the prediction and the recalled memories with their time offsets. <b
-      class="red">Red shading marks where a prediction differs from the ground truth.</b> It is an error overlay
-      drawn for visualization, not something the model generated. Where pose and appearance are ambiguous along a
-      corridor, FAR recalls a memory with a clear line of sight to the goal region.
+      Realistic indoor navigation with spatialized audio. Each block shows the ground-truth frame, then for each
+      method the prediction and the recalled memories with their time offsets. <b class="red">Red shading marks
+      where a prediction differs from the ground truth.</b> It is an error overlay drawn for visualization, not
+      something the model generated. Where pose and appearance are ambiguous along a corridor, FAR learns to rely on
+      audio and recalls a memory with a clear line of sight to the goal region.
     </p>
     <figure class="breakout" style="margin-top:0; margin-bottom:30px">
       <div class="media">
-        <video autoplay muted loop playsinline controls preload="auto">
+        <video autoplay muted loop playsinline controls preload="metadata" poster="static/posters/highlights_soundspaces.jpg">
           <source src="static/videos/highlights_soundspaces.mp4" type="video/mp4">
         </video>
       </div>
@@ -137,7 +148,7 @@
       <div class="grid cols-2">
               <figure>
           <div class="media">
-            <video muted playsinline controls preload="none">
+            <video muted playsinline controls preload="none" poster="static/posters/rollout_soundspaces_84.jpg">
               <source src="static/videos/rollout_soundspaces_84.mp4" type="video/mp4">
             </video>
           </div>
@@ -145,7 +156,7 @@
         </figure>
                     <figure>
           <div class="media">
-            <video muted playsinline controls preload="none">
+            <video muted playsinline controls preload="none" poster="static/posters/rollout_soundspaces_99.jpg">
               <source src="static/videos/rollout_soundspaces_99.mp4" type="video/mp4">
             </video>
           </div>
@@ -153,7 +164,7 @@
         </figure>
               <figure>
           <div class="media">
-            <video muted playsinline controls preload="none">
+            <video muted playsinline controls preload="none" poster="static/posters/rollout_soundspaces_212.jpg">
               <source src="static/videos/rollout_soundspaces_212.mp4" type="video/mp4">
             </video>
           </div>
@@ -161,7 +172,7 @@
         </figure>
         <figure>
           <div class="media">
-            <video muted playsinline controls preload="none">
+            <video muted playsinline controls preload="none" poster="static/posters/rollout_soundspaces_1115.jpg">
               <source src="static/videos/rollout_soundspaces_1115.mp4" type="video/mp4">
             </video>
           </div>
@@ -177,18 +188,16 @@
   <div class="container">
     <p class="eyebrow">AI2-THOR</p>
     <h2>FAR recalls the right state as the world changes</h2>
-    <p class="narrow" style="text-align:center">Interactive household scenes where the agent moves objects between surfaces and containers, so memory holds the same place in conflicting states. FAR recalls the interaction history and renders the current state rather than a stale one.</p>
-    <h3 style="text-align:center; margin-top:36px; margin-bottom:6px">AI2-THOR highlights</h3>
     <p class="caption" style="margin-bottom:18px">
-      Return-phase moments from several evaluation episodes, each labeled with its clip number. Every block shows the
-      ground-truth frame, then for each method the prediction and the recalled memories with their time offsets. A
-      badge on each prediction says whether the rendered state matches the world the agent left behind. When the
-      agent returns to a station it has changed, FAR recalls the frames from the interaction itself rather than a
-      pose-matched but stale view.
+      Interactive household scenes where the agent moves objects between surfaces and containers during exploration,
+      so memory holds the same place in conflicting world states. Each block shows the ground-truth frame, then for
+      each method the prediction and the recalled memories with their time offsets; a badge on each prediction says
+      whether the rendered state matches the world the agent left behind. FAR recalls the frames from the
+      interaction itself rather than a pose-matched but stale view.
     </p>
     <figure class="breakout" style="margin-top:0; margin-bottom:30px">
       <div class="media">
-        <video autoplay muted loop playsinline controls preload="auto">
+        <video autoplay muted loop playsinline controls preload="metadata" poster="static/posters/highlights_ai2thor.jpg">
           <source src="static/videos/highlights_ai2thor.mp4" type="video/mp4">
         </video>
       </div>
@@ -200,7 +209,7 @@
       <div class="grid cols-2">
         <figure>
           <div class="media">
-            <video muted playsinline controls preload="none">
+            <video muted playsinline controls preload="none" poster="static/posters/rollout_ai2thor_309.jpg">
               <source src="static/videos/rollout_ai2thor_309.mp4" type="video/mp4">
             </video>
           </div>
@@ -208,7 +217,7 @@
         </figure>
         <figure>
           <div class="media">
-            <video muted playsinline controls preload="none">
+            <video muted playsinline controls preload="none" poster="static/posters/rollout_ai2thor_350.jpg">
               <source src="static/videos/rollout_ai2thor_350.mp4" type="video/mp4">
             </video>
           </div>
@@ -216,7 +225,7 @@
         </figure>
         <figure>
           <div class="media">
-            <video muted playsinline controls preload="none">
+            <video muted playsinline controls preload="none" poster="static/posters/rollout_ai2thor_430.jpg">
               <source src="static/videos/rollout_ai2thor_430.mp4" type="video/mp4">
             </video>
           </div>
@@ -224,7 +233,7 @@
         </figure>
         <figure>
           <div class="media">
-            <video muted playsinline controls preload="none">
+            <video muted playsinline controls preload="none" poster="static/posters/rollout_ai2thor_dyn_47.jpg">
               <source src="static/videos/rollout_ai2thor_dyn_47.mp4" type="video/mp4">
             </video>
           </div>
@@ -238,10 +247,10 @@
 
 <footer>
   <div class="container">
-    Anonymous project page for double-blind review.
+    Project page for &ldquo;Learning What to Recall: Adaptive Multi-Cue Episodic Memory for World Models&rdquo;.
   </div>
 </footer>
 
-<script src="static/js/main.js?v=10"></script>
+<script src="static/js/main.js?v=18"></script>
 </body>
 </html>
