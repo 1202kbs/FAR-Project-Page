@@ -17,7 +17,7 @@
   <link rel="apple-touch-icon" href="static/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="static/css/style.css?v=18">
+  <link rel="stylesheet" href="static/css/style.css?v=19">
 </head>
 <body>
 
@@ -42,18 +42,22 @@
     <p class="venue">Under review</p>
 
     <div class="links">
-      <!-- TODO: fill in the Paper and arXiv links; "#" is a placeholder. Code repo goes live at sony/far. -->
+      <!-- TODO: point the Paper button at the arXiv abstract page once the id exists. -->
       <a class="btn" href="#">
         <svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6V2zm8 1.5V8h4.5L14 3.5zM8 12h8v1.5H8V12zm0 3h8v1.5H8V15zm0 3h5v1.5H8V18z"/></svg>
         Paper
       </a>
-      <a class="btn secondary" href="#">
-        <svg viewBox="0 0 24 24"><path d="M4 4h16v2H4V4zm0 7h16v2H4v-2zm0 7h10v2H4v-2z"/></svg>
-        arXiv
-      </a>
       <a class="btn secondary" href="https://github.com/sony/far">
         <svg viewBox="0 0 24 24"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
         Code <span class="soon">coming soon</span>
+      </a>
+      <a class="btn secondary" href="https://huggingface.co/1202kbs/FAR-Checkpoints">
+        <span class="emoji">&#129303;</span>
+        Checkpoints
+      </a>
+      <a class="btn secondary" href="https://huggingface.co/datasets/1202kbs/FAR-Datasets">
+        <span class="emoji">&#129303;</span>
+        Datasets
       </a>
     </div>
   </div>
@@ -499,6 +503,6 @@
   </div>
 </footer>
 
-<script src="static/js/main.js?v=18"></script>
+<script src="static/js/main.js?v=19"></script>
 </body>
 </html>

@@ -315,3 +315,6 @@ section.alt .stats-table .cell.stat { background: #fff; border: 1px solid var(--
   background: var(--accent); color: #fff;
   padding: 2px 8px; border-radius: 999px; margin-left: 2px;
 }
+
+/* Emoji icon inside a button (Hugging Face) */
+.btn .emoji { font-size: 1.1em; line-height: 1; }
