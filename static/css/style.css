@@ -309,12 +309,5 @@ section.alt .stats-table .cell.stat { background: #fff; border: 1px solid var(--
   .stats-table .cell.stat .v { font-size: 1.1rem; }
 }
 
-/* "coming soon" tag inside the Code button */
-.btn .soon {
-  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
-  background: var(--accent); color: #fff;
-  padding: 2px 8px; border-radius: 999px; margin-left: 2px;
-}
-
 /* Emoji icon inside a button (Hugging Face) */
 .btn .emoji { font-size: 1.1em; line-height: 1; }
